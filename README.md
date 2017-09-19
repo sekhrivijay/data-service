@@ -55,37 +55,33 @@ curl -s  -X GET  'http://localhost:8080/data/files/?serviceName=demo&fileName=my
 Update Operation:
 This will delete the existing file from the persistence store and add a new one
 echo "ABCD" > dummy.txt
-curl -i -X PUT -H "Content-Type: multipart/form-data" -F "file=@dummy.txt" 'http://solrx4119p.stag.ch4.s.com:8980/ds/data/?serviceName=cp&fileName=whiteList.txt&environment=BETA'
-{"metaData":{"serviceName":"cp","fileName":"whiteList.txt","environment":"BETA","timeStamp":1498755808106,"version":1},"data":{"status":"SUCCESSFUL","id":"595532e0d0634b6e7d2be010","length":0},"statusCode":0}
+curl -i -X PUT -H "Content-Type: multipart/form-data" -F "file=@dummy.txt" 'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev'
+{"metaData":{"serviceName":"demo","fileName":"myfile.txt","environment":"dev","timeStamp":1498755808106,"version":1},"data":{"status":"SUCCESSFUL","id":"595532e0d0634b6e7d2be010","length":0},"statusCode":0}
  
 Confirm by the reading the file again to see if the contents are updated
-curl -s  -X GET  'http://solrx4119p.stag.ch4.s.com:8980/ds/data/?serviceName=cp&fileName=whiteList.txt&environment=BETA'    
+curl -s  -X GET  'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev'    
 ABCD
  
 
 I added one additional feature for this service now. We could now attach any meta data using the same api when uploading or updating the files. Similarly we could query with any meta data when downloading or deleting the files.
 
 For example
-curl -i -X PUT -H "Content-Type: multipart/form-data" -F "file=@dummy.txt" 'http://solrx4119p.stag.ch4.s.com:8980/ds/data/?serviceName=cp&fileName=whiteList.txt&environment=BETA&mydata=abc&mydata2=xyz'
+curl -i -X PUT -H "Content-Type: multipart/form-data" -F "file=@dummy.txt" 'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev&mydata=abc&mydata2=xyz'
 This will attach all fields passed to the API along  with mandatory ones (filename, serviceName and environment) as meta data while storing the file in mongo
 Similarly we can query it back by passing any parameters along with the mandatory ones
-curl -s  -X GET  'http://solrx4119p.stag.ch4.s.com:8980/ds/data/?serviceName=cp&fileName=whiteList.txt&environment=BETA&mydata=abc&mydata2=xyz' > myfile
+curl -s  -X GET  'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev&mydata=abc&mydata2=xyz' > myfile
 This way in future we can attach whatever we want as meta data to the file.
  
  
-To use the Data service to fetch you files within microservice here is how to do it
+To use the Data service to fetch your files within microservice here is how to do it
   
 Get the latest  common-helper dependency in pom file
 <dependency>
-    <groupId>com.sears.search.common</groupId>
-    <artifactId>common-helper</artifactId>
-    <version>3.2.6</version>
-    <exclusions>
-        <exclusion>
-            <groupId>*</groupId>
-            <artifactId>*</artifactId>
-        </exclusion>
-    </exclusions>
+  <groupId>com.services.micro</groupId>
+	<artifactId>data</artifactId>
+	<version>0.0.1</version>
+ <classifier>client</classifier>
+    
 </dependency>
  
  
@@ -94,13 +90,8 @@ Get the latest  common-helper dependency in pom file
 Set the url for the data-service in application.yml file
 service:
    data:
-     baseUrl: 'http://solrx4119p.stag.ch4.s.com:8980/ds/data/'
- 
- Notice the above will be replaced by VIP for prod application yml files
-service:
-  data:
-       baseUrl: 'http://solrx-dsvip.prod.ch4.s.com/ds/data/'
- 
+     base-url: 'http://localhost:8080/data/files/'
+
  
 Inject the DataServiceClient like this in your code somewhere
  
@@ -119,8 +110,7 @@ Setup a scheduled code that runs every 12 hours or whatever the period we want u
  } 
  
  
-The above code will automatically use serviceName and environment and fileNameRead to query for that file and once found will stream it locally and copy it to
-fileNameWrite
+The above code will automatically use serviceName and environment and fileNameRead to query for that file and once found will stream it locally and copy it to fileNameWrite
  
  
 The 3rd parameter which is null can be used to add more tuples for querying the files . Here is an example. Use this only when we know more meta data was added while inserting the file at the first place.

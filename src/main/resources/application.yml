@@ -1,0 +1,79 @@
+server:
+  context-path: /${spring.application.name}
+
+spring:
+  application:
+    name: ds
+  profiles:
+    active: local
+  output:
+    ansi:
+      enabled: ALWAYS
+  jackson:
+    default-property-inclusion: non_null
+  cloud:
+    config:
+      allow-override: true
+      override-none: false
+      fail-fast: true
+      override-system-properties: false
+      enabled: false
+  sleuth:
+    web:
+      enabled: true
+    sampler:
+      percentage: 100
+  zipkin:
+    base-url: http://localhost:8680/
+    flush-interval: 15
+    enabled: false
+  data:
+    mongodb:
+      database: test
+      uri: mongodb://solrx313p.dev.ch3.s.com:27017/test
+
+logging:
+  level:
+    ROOT: INFO
+    com.amazonaws: DEBUG
+
+
+service:
+  metrics:
+    dropwizard:
+      enabled: true
+    prometheus:
+      enabled: true
+  git:
+    enabled: true
+  vip:
+    enabled: true
+  swagger:
+    enabled: false
+
+
+
+management:
+  security:
+    enabled: false
+
+#hystrix:
+#  command:
+#    helloCommandKey:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 10000
+#      circuitBreaker:
+#        requestVolumeThreshold: 4
+#        sleepWindowInMilliseconds: 60000
+#      metrics:
+#        rollingStats:
+#          timeInMilliseconds: 180000
+#  threadpool:
+#    helloThreadPoolKey:
+#      coreSize: 30
+#      metrics:
+#        rollingStats:
+#          timeInMilliseconds:18000
+

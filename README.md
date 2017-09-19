@@ -69,7 +69,10 @@ For example
 curl -i -X PUT -H "Content-Type: multipart/form-data" -F "file=@dummy.txt" 'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev&mydata=abc&mydata2=xyz'
 This will attach all fields passed to the API along  with mandatory ones (filename, serviceName and environment) as meta data while storing the file in mongo
 Similarly we can query it back by passing any parameters along with the mandatory ones
+```bash
 curl -s  -X GET  'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev&mydata=abc&mydata2=xyz' > myfile
+```
+
 This way in future we can attach whatever we want as meta data to the file.
  
  
@@ -77,27 +80,27 @@ To use the Data service to fetch your files within microservice here is how to d
   
 Get the latest  common-helper dependency in pom file
 ```xml
-<dependency>
-  <groupId>com.services.micro</groupId>
-	<artifactId>data</artifactId>
+  <dependency>
+      <groupId>com.services.micro</groupId>
+       <artifactId>data</artifactId>
 	<version>0.0.1</version>
- <classifier>client</classifier>
-    
-</dependency>
- ```
+       <classifier>client</classifier>
+
+  </dependency>
+```
  
  
  
 Set the url for the data-service in application.yml file
-  ```yaml
+```yaml
 service:
    data:
      base-url: 'http://localhost:8080/data/files/'
-     ```
+```
  
 Inject the DataServiceClient like this in your code somewhere
  
-    ```java
+```java
 @Inject
  private DataServiceClient dataServiceClient;
  
@@ -112,14 +115,15 @@ Setup a scheduled code that runs every 12 hours or whatever the period we want u
      }
  } 
  
-     ```
+```
+
 The above code will automatically use serviceName and environment and fileNameRead to query for that file and once found will stream it locally and copy it to fileNameWrite
  
  
 The 3rd parameter which is null can be used to add more tuples for querying the files . Here is an example. Use this only when we know more meta data was added while inserting the file at the first place.
-    ```java
+```java
 Map<String, String> metaData = new HashMap<>();
  metaData.put("MyKey", "MyValue");
  dataServiceClient.fetchFile(fileNameRead, fileNameWrite, metaData);
-     ```
+```
  

@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
 
 @Controller
-@RequestMapping("/data")
+@RequestMapping("/files")
 public class ServiceResource {
 
     @Inject

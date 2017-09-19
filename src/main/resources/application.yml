@@ -3,12 +3,15 @@ server:
 
 spring:
   application:
-    name: ds
+    name: data
   profiles:
     active: local
   output:
     ansi:
       enabled: ALWAYS
+  http:
+    multipart:
+      enabled: false
   jackson:
     default-property-inclusion: non_null
   cloud:

@@ -13,7 +13,7 @@ https://github.com/sekhrivijay/data-service/blob/master/src/main/java/com/servic
 
 
 It supports all CRUD operations and any file size
-Create operation :
+## Create operation :
 Post a big  file called jprofiler_linux_7_2_1.tar.gz and name it myfile.txt and assign meta data serviceName demo and environment BETA to it like this
 curl -i -X POST -H "Content-Type: multipart/form-data" -F "file=@jprofiler_linux_7_2_1.tar.gz" 'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev'
  
@@ -28,7 +28,7 @@ curl -i -X POST -H "Content-Type: multipart/form-data" -F "file=@jprofiler_linux
  ","path":"/data/files/"}
  
  
-Read Operation :
+## Read Operation :
 Get the big file back just by changing the HTTP method and saving the file like this
 curl -s  -X GET  'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev' > myfile
  
@@ -42,7 +42,7 @@ Confirm that the file upload is same as file downloaded
 [ ~]$ diff jprofiler_linux_7_2_1.tar.gz myfile
  
  
-Delete Operation:
+## Delete Operation:
 Delete any file from the persistence  store by just changing the HTTP method
 curl -s  -X DELETE  'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev'
 It will also return response like this
@@ -52,7 +52,7 @@ Confirm by trying to read the file again and you should get an exception message
 curl -s  -X GET  'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev'
 {"timestamp":1498755714465,"status":500,"error":"Internal Server Error","exception":"java.lang.Exception","message":"File Not found in MongoDB","path":"/data/files/"}
  
-Update Operation:
+## Update Operation:
 This will delete the existing file from the persistence store and add a new one
 echo "ABCD" > dummy.txt
 curl -i -X PUT -H "Content-Type: multipart/form-data" -F "file=@dummy.txt" 'http://localhost:8080/data/files/?serviceName=demo&fileName=myfile.txt&environment=dev'
@@ -76,6 +76,7 @@ This way in future we can attach whatever we want as meta data to the file.
 To use the Data service to fetch your files within microservice here is how to do it
   
 Get the latest  common-helper dependency in pom file
+```xml
 <dependency>
   <groupId>com.services.micro</groupId>
 	<artifactId>data</artifactId>
@@ -83,18 +84,20 @@ Get the latest  common-helper dependency in pom file
  <classifier>client</classifier>
     
 </dependency>
- 
+ ```
  
  
  
 Set the url for the data-service in application.yml file
+  ```yaml
 service:
    data:
      base-url: 'http://localhost:8080/data/files/'
-
+     ```
  
 Inject the DataServiceClient like this in your code somewhere
  
+    ```java
 @Inject
  private DataServiceClient dataServiceClient;
  
@@ -109,12 +112,14 @@ Setup a scheduled code that runs every 12 hours or whatever the period we want u
      }
  } 
  
- 
+     ```
 The above code will automatically use serviceName and environment and fileNameRead to query for that file and once found will stream it locally and copy it to fileNameWrite
  
  
 The 3rd parameter which is null can be used to add more tuples for querying the files . Here is an example. Use this only when we know more meta data was added while inserting the file at the first place.
+    ```java
 Map<String, String> metaData = new HashMap<>();
  metaData.put("MyKey", "MyValue");
  dataServiceClient.fetchFile(fileNameRead, fileNameWrite, metaData);
+     ```
  

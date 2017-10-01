@@ -2,7 +2,7 @@ package com.services.micro.data.api.response;
 
 import java.io.Serializable;
 
-public class Error implements Serializable{
+public class Error implements Serializable {
     private String message;
 
     public String getMessage() {

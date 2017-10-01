@@ -3,7 +3,8 @@ package com.services.micro.data.bl.crud;
 
 import com.services.micro.data.api.request.ServiceRequest;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -12,31 +13,31 @@ import java.util.Map;
 
 @Named
 public class DataRepositoryServiceFactory {
-    private static Logger logger = Logger.getLogger(DataRepositoryServiceFactory.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataRepositoryServiceFactory.class);
 
     @Inject
     @Named("mongoDataRepositoryCrudService")
     private DataRepositoryCrudService mongoDataRepositoryCrudService;
 
-    @Inject
-    @Named("ftpDataRepositoryCrudService")
-    private DataRepositoryCrudService ftpDataRepositoryCrudService;
+//    @Inject
+//    @Named("ftpDataRepositoryCrudService")
+//    private DataRepositoryCrudService ftpDataRepositoryCrudService;
 
     @Inject
     @Named("gitDataRepositoryCrudService")
     private DataRepositoryCrudService gitDataRepositoryCrudService;
 
-    @Inject
-    @Named("minioDataRepositoryCrudService")
-    private DataRepositoryCrudService minioDataRepositoryCrudService;
+//    @Inject
+//    @Named("minioDataRepositoryCrudService")
+//    private DataRepositoryCrudService minioDataRepositoryCrudService;
+//
+//    @Inject
+//    @Named("s3DataRepositoryCrudService")
+//    private DataRepositoryCrudService s3DataRepositoryCrudService;
 
-    @Inject
-    @Named("s3DataRepositoryCrudService")
-    private DataRepositoryCrudService s3DataRepositoryCrudService;
-
-    @Inject
-    @Named("defaultDataRepositoryCrudService")
-    private DataRepositoryCrudService defaultDataRepositoryCrudService;
+//    @Inject
+//    @Named("defaultDataRepositoryCrudService")
+//    private DataRepositoryCrudService defaultDataRepositoryCrudService;
 
 
     @Inject
@@ -44,10 +45,12 @@ public class DataRepositoryServiceFactory {
 
 
     public DataRepositoryCrudService lookUp(ServiceRequest serviceRequest) {
-        logger.debug(serviceRepositorySources);
-        logger.info(serviceRequest);
+        LOGGER.debug(serviceRepositorySources.toString());
+        LOGGER.info(serviceRequest.toString());
         DataRepositoryCrudService dataCrudService = mongoDataRepositoryCrudService;
-        if (serviceRequest == null || StringUtils.isEmpty(serviceRequest.getFileName()) || StringUtils.isEmpty(serviceRequest.getServiceName())) {
+        if (serviceRequest == null
+                || StringUtils.isEmpty(serviceRequest.getFileName())
+                || StringUtils.isEmpty(serviceRequest.getServiceName())) {
             return dataCrudService;
         }
         Map<String, String> metaKey = new HashMap<>();

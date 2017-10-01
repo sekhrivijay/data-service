@@ -6,7 +6,10 @@ import com.services.micro.data.api.request.ServiceRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.services.micro.data.config.ConfigurationConstants.*;
+import static com.services.micro.data.config.ConfigurationConstants.FILE_NAME;
+import static com.services.micro.data.config.ConfigurationConstants.SERVICE_NAME;
+import static com.services.micro.data.config.ConfigurationConstants.ENVIRONMENT;
+import static com.services.micro.data.config.ConfigurationConstants.META_KEYS;
 
 public class ResourceUtil {
 

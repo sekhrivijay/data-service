@@ -6,11 +6,11 @@ import com.services.micro.data.api.response.Data;
 import com.services.micro.data.bl.crud.DataRepositoryCrudService;
 
 public abstract class DataRepositoryCrudServiceBase implements DataRepositoryCrudService {
-    protected Data FALLBACK_DATA = new Data();
+//    protected Data fallbackData = new Data();
 
 
     protected void checkIfValid(ServiceRequest serviceRequest) throws Exception {
-        if(serviceRequest == null
+        if (serviceRequest == null
                 || serviceRequest.getServiceName() == null
                 || serviceRequest.getFileName() == null
                 || serviceRequest.getEnvironment() == null) {

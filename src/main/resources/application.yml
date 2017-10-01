@@ -33,7 +33,7 @@ spring:
   data:
     mongodb:
       database: test
-      uri: mongodb://solrx313p.dev.ch3.s.com:27017/test
+      uri: mongodb://localhost:27017/test
 
 logging:
   level:

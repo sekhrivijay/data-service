@@ -15,8 +15,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Map;
+import org.springframework.http.MediaType;
 
-import static com.services.micro.data.config.ConfigurationConstants.*;
+import static com.services.micro.data.config.ConfigurationConstants.FILE_NAME;
+import static com.services.micro.data.config.ConfigurationConstants.SERVICE_NAME;
+import static com.services.micro.data.config.ConfigurationConstants.ENVIRONMENT;
 
 @Component
 @EnableConfigurationProperties(DataServiceConfigurationProperties.class)
@@ -34,7 +37,9 @@ public class DataServiceClient {
     public void fetchFile(String fileNameRead, String fileNameWrite, Map<String, String> metaData) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         RequestCallback requestCallback = request -> request.getHeaders()
-                .setAccept(Arrays.asList(org.springframework.http.MediaType.APPLICATION_OCTET_STREAM, org.springframework.http.MediaType.ALL));
+                .setAccept(Arrays.asList(
+                        MediaType.APPLICATION_OCTET_STREAM,
+                        MediaType.ALL));
 
         ResponseExtractor<Void> responseExtractor = response -> {
             Files.copy(response.getBody(), Paths.get(fileNameWrite), StandardCopyOption.REPLACE_EXISTING);

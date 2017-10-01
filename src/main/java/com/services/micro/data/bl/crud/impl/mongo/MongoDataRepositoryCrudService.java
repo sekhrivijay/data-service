@@ -14,7 +14,10 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 import javax.inject.Named;
 
-import static com.services.micro.data.config.ConfigurationConstants.*;
+import static com.services.micro.data.config.ConfigurationConstants.FILE_NAME;
+import static com.services.micro.data.config.ConfigurationConstants.SERVICE_NAME;
+import static com.services.micro.data.config.ConfigurationConstants.ENVIRONMENT;
+import static com.services.micro.data.config.ConfigurationConstants.METADATA_DOT;
 
 
 @Named

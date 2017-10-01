@@ -18,7 +18,7 @@ public class Data implements Serializable {
 
     private byte[] rawData;
 
-    private long length ;
+    private long length;
 
     private InputStream inputStream;
 
@@ -67,7 +67,7 @@ public class Data implements Serializable {
         private Status status;
         private String id;
         private byte[] rawData;
-        private long length ;
+        private long length;
         private InputStream inputStream;
 
         private DataBuilder() {

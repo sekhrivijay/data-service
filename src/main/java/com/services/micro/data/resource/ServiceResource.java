@@ -2,7 +2,7 @@ package com.services.micro.data.resource;
 
 import com.services.micro.data.api.request.ServiceRequest;
 import com.services.micro.data.api.response.Data;
-import com.services.micro.data.api.response.Error;
+//import com.services.micro.data.api.response.Error;
 import com.services.micro.data.api.response.ServiceResponse;
 import com.services.micro.data.bl.DataService;
 import com.services.micro.data.util.ResourceUtil;
@@ -12,10 +12,15 @@ import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
-import org.springframework.http.HttpStatus;
+//import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.inject.Inject;
@@ -42,8 +47,10 @@ public class ServiceResource {
     }
 
     @PostMapping("/")
-    public @ResponseBody
-    ResponseEntity<ServiceResponse> create(WebRequest webRequest, HttpServletRequest httpServletRequest) throws Exception {
+    @ResponseBody
+    public ResponseEntity<ServiceResponse> create(
+            WebRequest webRequest,
+            HttpServletRequest httpServletRequest) throws Exception {
         ServiceRequest serviceRequest = ResourceUtil.buildServiceRequest(webRequest.getParameterMap());
         Data data = Data.DataBuilder.aData()
                 .withInputStream(getFileInputStream(httpServletRequest))
@@ -55,8 +62,8 @@ public class ServiceResource {
 
 
     @DeleteMapping("/")
-    public @ResponseBody
-    ResponseEntity<ServiceResponse> delete(WebRequest webRequest) throws Exception {
+    @ResponseBody
+    public ResponseEntity<ServiceResponse> delete(WebRequest webRequest) throws Exception {
         ServiceRequest serviceRequest = ResourceUtil.buildServiceRequest(webRequest.getParameterMap());
         return ResponseEntity.ok()
                 .body(dataService.delete(serviceRequest));
@@ -64,8 +71,9 @@ public class ServiceResource {
 
 
     @PutMapping("/")
-    public @ResponseBody
-    ResponseEntity<ServiceResponse> update(WebRequest webRequest, HttpServletRequest httpServletRequest) throws Exception {
+    @ResponseBody
+    public ResponseEntity<ServiceResponse> update(WebRequest webRequest,
+                                           HttpServletRequest httpServletRequest) throws Exception {
         ServiceRequest serviceRequest = ResourceUtil.buildServiceRequest(webRequest.getParameterMap());
         Data data = Data.DataBuilder.aData()
                 .withInputStream(getFileInputStream(httpServletRequest))
@@ -76,16 +84,16 @@ public class ServiceResource {
     }
 
 
-    private ResponseEntity<ServiceResponse> buildUnsuccessfullResponse(String message) {
-        Error error = Error.ErrorBuilder.anError()
-                .withMessage(message)
-                .build();
-        ServiceResponse serviceResponse = ServiceResponse.ServiceResponseBuilder.aServiceResponse()
-                .withError(error)
-                .build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(serviceResponse);
-    }
+//    private ResponseEntity<ServiceResponse> buildUnsuccessfullResponse(String message) {
+//        Error error = Error.ErrorBuilder.anError()
+//                .withMessage(message)
+//                .build();
+//        ServiceResponse serviceResponse = ServiceResponse.ServiceResponseBuilder.aServiceResponse()
+//                .withError(error)
+//                .build();
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(serviceResponse);
+//    }
 
 
     private InputStream getFileInputStream(HttpServletRequest httpServletRequest) throws Exception {
@@ -106,6 +114,7 @@ public class ServiceResource {
     }
 
     private static boolean isMultipartContent(HttpServletRequest request) {
-        return !"POST".equalsIgnoreCase(request.getMethod()) && !"PUT".equalsIgnoreCase(request.getMethod()) ? false : FileUploadBase.isMultipartContent(new ServletRequestContext(request));
+        return ("POST".equalsIgnoreCase(request.getMethod()) || "PUT".equalsIgnoreCase(request.getMethod()))
+                && FileUploadBase.isMultipartContent(new ServletRequestContext(request));
     }
 }
